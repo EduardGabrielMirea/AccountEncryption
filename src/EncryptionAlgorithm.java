@@ -2,6 +2,7 @@ import java.io.*;
 public class EncryptionAlgorithm {
 
     /**
+     *
      * Introduce el texto a cifrar:
      * Buenas, que tal?
      * Introduce la clave:
