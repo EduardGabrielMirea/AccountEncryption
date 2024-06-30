@@ -1,4 +1,4 @@
-import java.util.Random;
+import java.io.*;
 public class EncryptionAlgorithm {
 
     /**
@@ -14,51 +14,64 @@ public class EncryptionAlgorithm {
      * @return
      */
 
-
     public String encrypt(String Plaintext, String key) {
         StringBuilder encryptedText = new StringBuilder();
         int keyLength = key.length();
-        boolean nonAlphabetic = false;
 
         for (int i = 0; i < Plaintext.length(); i++) {
-            char letra = Plaintext.charAt(i);
-            int posicionClave = (key.charAt(i % keyLength)) - 'A';
-
-            if (Character.isLetter(letra)) {
-                char cryptedLetter = (char) ((letra - 'A' + posicionClave) % Serviceable.alphabetSize + 'A');
+            char letter = Plaintext.charAt(i);
+            if (Character.isLetter(letter)) {
+                char base = Character.isUpperCase(letter) ? 'A' : 'a';
+                int keyPosition = Character.toUpperCase(key.charAt(i % keyLength)) - 'A';
+                char cryptedLetter = (char) ((letter - base + keyPosition) % Serviceable.alphabetSize + base);
                 encryptedText.append(cryptedLetter);
             } else {
-                nonAlphabetic = true;
-                encryptedText.append(letra);  // Mantener caracteres no alfabéticos
+                encryptedText.append(letter);  // Mantener caracteres no alfabéticos
             }
         }
-
-        if (!nonAlphabetic) {
-            Random random = new Random();
-            int randomPosition = random.nextInt(encryptedText.length());
-            char randomNonAlphabetic = Serviceable.nonAlphabeticChars[random.nextInt(Serviceable.nonAlphabeticChars.length)];
-            encryptedText.setCharAt(randomPosition, randomNonAlphabetic);
-        }
-
         return encryptedText.toString();
     }
 
-    public String uncrypt(String encryptedText, String key) {
+    public String decrypt(String encryptedText, String key) {
         StringBuilder decryptedText = new StringBuilder();
         int keyLength = key.length();
 
         for (int i = 0; i < encryptedText.length(); i++) {
             char lettter = encryptedText.charAt(i);
-            int positionKey = (key.charAt(i % keyLength)) - 'A';
-
             if (Character.isLetter(lettter)) {
-                char decryptedLetter = (char) ((lettter - 'A' - positionKey + Serviceable.alphabetSize) % Serviceable.alphabetSize + 'A');
+                char base = Character.isUpperCase(lettter) ? 'A' : 'a';
+                int keyPosition = Character.toUpperCase(key.charAt(i % keyLength)) - 'A';
+                char decryptedLetter = (char) ((lettter - base - keyPosition + Serviceable.alphabetSize) % Serviceable.alphabetSize + base);
                 decryptedText.append(decryptedLetter);
             } else {
                 decryptedText.append(lettter);  // Mantener caracteres no alfabéticos
             }
         }
         return decryptedText.toString();
+    }
+
+    public void encryptFile(String inputFilePath, String outputFilePath, String key) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(inputFilePath));
+             PrintWriter pw = new PrintWriter(new FileWriter(outputFilePath))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String encryptedLine = encrypt(line, key);
+                pw.println(encryptedLine);
+            }
+        }
+    }
+
+    public void deCryptFile(String inputFilePath, String outputFilePath, String key) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(outputFilePath));
+             PrintWriter pw = new PrintWriter(new FileWriter(inputFilePath))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String decryptedLine = decrypt(line, key);
+                pw.println(decryptedLine);
+            }
+        }
     }
 }
 
