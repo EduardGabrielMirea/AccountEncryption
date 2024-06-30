@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -9,39 +6,42 @@ public class App {
 
         Scanner sc = new Scanner(System.in);
         EncryptionAlgorithm crypt = new EncryptionAlgorithm();
-/*
-        System.out.println("Introduce el texto a cifrar:");
-        String Plaintext = sc.nextLine();
 
-        System.out.println("Introduce la clave:");
-        String key = sc.nextLine();
+        System.out.println("To encrypt, we will need: \n" +
+                "1- The text file we want to encrypt (TextToEncrypt).\n" +
+                "2- The key we will use for encryption, which will be a String you will enter.\n" +
+                "3- A text file where we will save the encrypted text (EncryptedText).\n" +
+                "4- A text file where we will save the decrypted text (TextDecrypted).");
 
-        String encryptedText = crypt.encrypt(Plaintext, key);
-        System.out.println("Texto cifrado: " + encryptedText);
+        String TextToEncrypt = "src/Text/TextToEncrypt";
+        String EncryptedText = "src/Text/EncryptedText";
 
-        String decryptedText = crypt.decrypt(encryptedText, key);
-        System.out.println("Texto descifrado: " + decryptedText);
+        /*
+         Let's set a condition for the user, where we will explicitly ask them to enter a key that is alphabetical, avoiding numbers or other characters.
+         */
+        String key;
+            while (true) {
+                System.out.println("Enter the key:");
+                key = sc.nextLine();
+                /*
+                We validate that the key only contains letters using the `.matches` method.
+                This method compares the characters of the key with the characters we specify within the list, where they can match one or more times, hence we use the `+` sign.
+                 */
+                if (key.matches("[a-zA-Z]+")) {
+                    break;
+                } else {
+                    System.out.println("The entered key contains numbers or special characters. Please enter only letters.");
+                }
+            }
 
- */
 
-        System.out.println("Para cifar vamos a necesitar: \n"+
-                "1- El archivo de texto que vayamos a cifrar (TextToEncrypt).\n"+
-                "2- La calve que vamos a usar para encriptar que va a ser un String que usted va a introducir.\n"+
-                "3- Un archivo de texto donde vamos a guardar el cifrado.");
+        crypt.enCryptFile(TextToEncrypt, EncryptedText, key);
+        System.out.println("The file has been encrypted and saved to: " + EncryptedText);
 
-        String inputFilePath = "src/TextToEncrypt";
-        String outputFilePath = "src/EncryptedText";
+        String TextDecrypted = "src/Text/TextDecrypted";
+        crypt.deCryptFile(EncryptedText, TextDecrypted, key);
 
-        System.out.println("Introduce la clave:");
-        String key = sc.nextLine();
-
-        crypt.encryptFile(inputFilePath, outputFilePath, key);
-
-        System.out.println("El archivo ha sido cifrado y guardado en: " + outputFilePath);
-
-        crypt.deCryptFile(inputFilePath,outputFilePath,key);
-
-        System.out.println("El archivo ha sido descifrado y guardado en: " + inputFilePath);
+        System.out.println("The file has been decrypted and saved to: " + TextDecrypted);
 
     }
 }

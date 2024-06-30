@@ -1,7 +1,8 @@
 public class Serviceable {
+    /**
+     * La longitud del alfabeto que vamos a usar para el cifrado y el descifrado.
+     * En este caso, usamos la medida del alfabeto español.
+     */
+
     public static final int alphabetSize = 26;
-    public static final char[] nonAlphabeticChars = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            '!', '@', '#', '$', '%', '^', '&', '*', '(', ')'
-    };
 }
